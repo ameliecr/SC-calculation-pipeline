@@ -1,0 +1,1 @@
+Atlas images included in the FreeSurfer software package

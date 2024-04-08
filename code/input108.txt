@@ -1,0 +1,66 @@
+# Freesurfer license
+# ------------------
+email=end.user@your-institute.de
+digit=xxxxx
+line1=xxxxxxxxxxxxx
+line2=xxxxxxxxxxxxx
+
+# Input variables
+# ---------------
+tract=10000000                    # Total number of streamlines for whole-brain tractography
+atlname=108_Craddock           # Compact name of the atlas for prefixing results (Schaefer2018_100Parcels_17Networks, HarvardOxford_96Parcels)
+numparc=108                     # Total number of regions in a given atlas
+shells=0,1000,2000,3000         # shells=0,1000,2000,3000 for HCP dwMRI, i.e., b-values
+non_zero_shells=1000,2000,3000  # shells=1000,2000,3000 for HCP dwMRI
+
+# Paths setting
+# -------------
+sp=/mnt_sp                                                              # Source (raw) data path
+fp=/mnt_fp                                                              # Subject's path for freesurfer
+ap=/mnt_ap                                                              # Atlas path
+ppsc=/mnt_sc                                                            # Output directory for structural connectivity
+parcellation=mni152                                                     # Parcellation scheme (native: use gcs classifier; mni152: use non-linear registration from MNI152 T1 space; manual: use a volumetric parcellation image in T1w).
+# gcs_lh=lh.DesikanKilliany_68Parcels.gcs                        # If the parcellation scheme is 'native', provide a 'gcs' filename for 'gcs_lh'
+# gcs_rh=rh.DesikanKilliany_68Parcels.gcs                        # If the parcellation scheme is 'native', provide a 'gcs' filename for 'gcs_rh'
+# labels="{1001..1035} {2001..2035}"                                      # If the parcellation scheme is 'native', provide a list of labels in the atlas.
+atlas=108-CraddockSCorr2Level-1mm.nii.gz                                                      # If the parcellation scheme is 'mni152', provide a filename of an atlas on the MNI 1mm space (6th generation in FSL).
+# atlas_background=atlas_backgraond_t1w.nii.gz                            # If the parcellation scheme is 'manual', provide a filename of a corresponding T1-weighted image.
+mni=/usr/share/fsl/5.0/data/standard/MNI152_T1_1mm.nii.gz               # Standard template for registration
+mni_brain=/usr/share/fsl/5.0/data/standard/MNI152_T1_1mm_brain.nii.gz   # Standard brain template for registration
+
+# [PART 1] ============
+# Preprocess parameters
+# =====================
+pe_json=json                # Use a json file for the phase encoding during dwifslpreproc
+pe_dir=ap                   # Direction of the phase encoding (ap = anterior to posterior, lr = left to right, pa, and rl). If a json file is assigned, this option will not be used.
+coreg_flirt_dof=6           # Option of the flirt function
+coreg_flirt_cost=corratio   # Option of the flirt function (mutualinfo or corratio)
+reg_flirt_dof=12            # Option of the flirt function
+reg_flirt_cost=corratio     # Option of the flirt function
+reg_fnirt_interp=trilinear  # Option of the fnirt function (spline or trilinear)
+
+# [PART 2] ==============
+# Tractography parameters
+# =======================
+tracking_algorithm=dependent        # use `dependent` for automatic checking b-values (shells), tournier (valid for a single non-zero b-value), dhollander (valid for multiple non-zeo b-values), fa, manual, msmt_5tt, tax
+fod_algorithm=dependent             # use `dependent` for automatic checking b-values (shells), csd for tournier, msmt_csd for dhollander or msmt_5tt
+tckgen_algorithm=iFOD2              # FACT, iFOD1, iFOD2 (default), NullDist1, SD_STREAM, SeedTest, Tensor_Det, and Tensor_Prob
+tckgen_step=0.625                   # in millimeter (defaults: for first-order algorithms, 0.1 x voxelsize; if using RK4, 0.25 x voxelsize; for iFOD2: 0.5 x voxelsize)
+tckgen_angle=45                     # in degree (default = 45)
+tckgen_minlength=2.5                # in millimeter
+tckgen_maxlength=250                # in millimeter
+tckgen_cutoff=0.06                  # default = 0.06
+tckgen_trials=1000                  # default = 1000
+tckgen_downsample=3                 # default = 3
+tckgen_max_attempts_per_seed=1000   # default = 1000
+tckgen_samples=4                    # default = 4
+tckgen_power=0.25                   # default = 0.25 (1/tckgen_samples)
+
+# [PART 3] ===========
+# Atlas transformation
+# ====================
+
+# [PART 4] ==
+# Reconstruct
+# ===========
+tck2connectome_assignment_radial_search=2 # default = 2s
