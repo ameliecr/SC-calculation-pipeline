@@ -72,8 +72,6 @@ echo "    Starting time in seconds ${startingtime}" >> ${et}
 
 tck=${ppsc}/${sbj}/WBT_${tractM}_ctx.tck
 odfWM=${ppsc}/${sbj}/odf_wm.mif
-counts_sift2=${ppsc}/${sbj}/${atlname}_${tractM}_${parcellation}_countsift2.csv
-sift2_weight_per_streamline=${ppsc}/${sbj}/${tractM}_sift2weight_per_streamline.csv
 counts=${ppsc}/${sbj}/${atlname}_${tractM}_${parcellation}_count.csv
 lengths=${ppsc}/${sbj}/${atlname}_${tractM}_${parcellation}_length.csv
 fas=${ppsc}/${sbj}/${atlname}_${tractM}_${parcellation}_fa.csv
@@ -84,22 +82,6 @@ ads=${ppsc}/${sbj}/${atlname}_${tractM}_${parcellation}_ad.csv
 mean_ad_per_streamline=${ppsc}/${sbj}/${atlname}_${tractM}_${parcellation}_mean_ad_per_streamline.csv
 rds=${ppsc}/${sbj}/${atlname}_${tractM}_${parcellation}_rd.csv
 mean_rd_per_streamline=${ppsc}/${sbj}/${atlname}_${tractM}_${parcellation}_mean_rd_per_streamline.csv
-
-# SC Reconstruct SIFT2 filtered
-# --------------
-printf "${GRN}[MRtrix]${RED} ID: ${sbj}${NCR} - Reconstruct structural connectivity (counts - SIFT2 filtered).\n"
-if [[ -f ${sift2_weight_per_streamline} ]]; then
-	printf "SIFT2 weighting per streamline has already been calcuated. Skipping this step.\n"
-else
-	tcksift2 -force -nthreads ${threads} ${tck} ${odfWM} ${sift2_weight_per_streamline}
-fi
-tck2connectome -symmetric -force -nthreads ${threads} -assignment_radial_search ${tck2connectome_assignment_radial_search} -tck_weights_in ${sift2_weight_per_streamline} ${tck} ${atl} ${counts_sift2}
-if [[ -f ${counts_sift2} ]]; then
-	printf "${GRN}[MRtrix]${RED} ID: ${sbj}${NCR} - ${counts_sift2} has been saved.\n"
-else
-	printf "${GRN}[MRtrix]${RED} ID: ${sbj}${NCR} - ${counts_sift2} has not been saved!!\n"
-	exit 1
-fi
 
 # SC Reconstruct
 # --------------
